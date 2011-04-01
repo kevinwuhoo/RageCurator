@@ -1,2 +1,6 @@
-<h1>Rage#scrape</h1>
-<p>Find me in app/views/rage/scrape.html.erb</p>
+Scraped <%= @comics.count %> entries.
+<br />
+<br />
+<% @comics.each do | comic | %>
+  <p><%= comic[0] %> <%= comic[1] %> <%= comic[2] %></p>
+<% end %> 
