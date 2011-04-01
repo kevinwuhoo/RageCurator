@@ -1,0 +1,2 @@
+module RageHelper
+end
