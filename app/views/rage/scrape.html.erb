@@ -1,6 +1,7 @@
-Scraped <%= @comics.count %> entries.
+Scraped <%= @scraped_comics.count %> entries. <br />
+Added <%= @add_count %> entries.
 <br />
 <br />
-<% @comics.each do | comic | %>
-  <p><%= comic[0] %> <%= comic[1] %> <%= comic[2] %></p>
+<% @scraped_comics.each do | c | %>
+  <p><%= c[0] %> <%= c[1] %> <%= c[2] %></p>
 <% end %> 

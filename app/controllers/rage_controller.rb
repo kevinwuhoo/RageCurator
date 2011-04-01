@@ -21,17 +21,28 @@ class RageController < ApplicationController
   def scrape
     require 'open-uri'
     require 'nokogiri'
-    @comics = []
+
+    @scraped_comics = []
+    @add_count = 0
+
     url = 'http://www.reddit.com/r/fffffffuuuuuuuuuuuu'
     doc = Nokogiri::HTML(open(url))
 
     doc.xpath('//a[@class="title "]').each do | method_span |  
-      @comics.push [method_span.content, method_span["href"]]
+      @scraped_comics.push [method_span.content, method_span["href"]]
     end  
 
     doc.xpath('//a[@class="comments"]').each_with_index do | method_span, i |  
-      @comics[i].push method_span["href"]
-    end  
+      @scraped_comics[i].push method_span["href"]
+    end
+
+    @scraped_comics.each do | scrape |
+      if Comic.where(:reddit => scrape[2]).empty?
+        Comic.create( :title => scrape[0], :image => scrape[1], :reddit => scrape[2], 
+                      :view => false, :tweet => false)
+        @add_count += 1
+      end
+    end
     
   end
 
