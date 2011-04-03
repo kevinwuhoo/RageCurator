@@ -1,2 +1,6 @@
-<h1>Rage#queue</h1>
-<p>Find me in app/views/rage/queue.html.erb</p>
+<h2>Queue</h2>
+<br />
+<% @queue_comics.each do |c| %>
+  <%= raw display_comic c %>
+<% end %>
+  

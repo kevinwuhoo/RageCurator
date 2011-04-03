@@ -6,15 +6,12 @@ class RageController < ApplicationController
     require 'json'
     url = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=ragecurator&count=1&trim_user=true'
     content = JSON.parse(open(url).read)[0]["text"]
-    @text = content[0, content.index("http")]
-    @image = content[content.index("http"), content.length] 
+    @comic = Comic.new(:title => content[0, content.index("http")],
+                       :link => content[content.index("http"), content.length])
+
   end
 
   def add
-    #@add_comics = []
-    #Comic.where(:view => false).limit(25).each do | c |
-      #@add_comics.push c
-    #end
     @add_comics = Comic.where(:view => false).limit(25)
     if @add_comics.nil?
       @first_comic_id = @add_comics.first[:id]
@@ -24,6 +21,7 @@ class RageController < ApplicationController
   end
 
   def queue
+    @queue_comics = Comic.where(:queue => true).limit(10)
   end
 
   # Scrapes reddit.com
@@ -47,8 +45,9 @@ class RageController < ApplicationController
 
     @scraped_comics.each do | scrape |
       if Comic.where(:reddit => scrape[2]).empty?
-        Comic.create( :title => scrape[0], :link => scrape[1], :reddit => scrape[2], 
-                      :view => false, :tweet => false)
+        Comic.create( :title => scrape[0], :link => scrape[1], 
+                      :reddit => scrape[2], :view => false, :tweet => false,
+                       :queue => false)
         @add_count += 1
       end
     end
@@ -56,11 +55,6 @@ class RageController < ApplicationController
   end
 
   def add_submit
-
-    puts "=============================>"
-    puts params[:first_comic_id]
-    puts "=============================>"
-
     @add_comics = []
     @error = nil
 
@@ -79,7 +73,7 @@ class RageController < ApplicationController
     end
 
     # Mark all viewed as seen.
-    # For all in add_comic modify title and link in db, mark as tweet.
+    # For all in add_comic modify title and link in db, mark as in queue.
     if @error.nil?
       for i in (params[:first_comic_id].to_i..params[:last_comic_id].to_i)
         c = Comic.find_by_id(i)
@@ -90,7 +84,7 @@ class RageController < ApplicationController
         key = c[:id]
         c.title = params["#{key}_title"]
         c.link = params["#{key}_link"]
-        c.tweet = true
+        c.queue = true
         c.save
       end
     end
