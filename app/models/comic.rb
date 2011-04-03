@@ -5,7 +5,7 @@
 #
 #  id         :integer         not null, primary key
 #  title      :string(255)
-#  image      :string(255)
+#  link       :string(255)
 #  reddit     :string(255)
 #  view       :boolean
 #  tweet      :boolean
@@ -14,4 +14,10 @@
 #
 
 class Comic < ActiveRecord::Base
+
+  def image?
+    puts "slow?"
+    !FastImage.type(link).nil?
+  end
+
 end

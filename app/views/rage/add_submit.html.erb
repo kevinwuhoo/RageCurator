@@ -1,0 +1,13 @@
+<% if !@error.nil? %>
+  <%= @error %>
+<% else %>
+  Added <%= @add_comics.count %> comics.
+  <br />
+  <br />
+  <% @add_comics.each do |c| %>
+    <%= c.title %>
+    <%= c.link %>
+    <br />
+  <% end %>
+<% end %>
+

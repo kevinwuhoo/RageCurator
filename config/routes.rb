@@ -3,6 +3,7 @@ RageCurator::Application.routes.draw do
   match '/add',     :to => 'rage#add'
   match '/queue',   :to => 'rage#queue'
   match '/scrape',  :to => 'rage#scrape'
+  match '/add_submit',  :to => 'rage#add_submit'
 
   root :to => 'rage#home'
 

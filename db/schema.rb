@@ -10,11 +10,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110401212813) do
+ActiveRecord::Schema.define(:version => 20110403021946) do
 
   create_table "comics", :force => true do |t|
     t.string   "title"
-    t.string   "image"
+    t.string   "link"
     t.string   "reddit"
     t.boolean  "view"
     t.boolean  "tweet"

@@ -1,2 +1,37 @@
-<h1>Rage#add</h1>
-<p>Find me in app/views/rage/add.html.erb</p>
+<h2>Add New Comics!</h2>
+
+<% if @add_comics.empty? %>
+  <h3> No comics in database, scrape for more lulz! </h3>
+<% else %>
+
+  <%= form_tag({:controller => "rage", :action => "add_submit"}, :method => "post") do%>
+    <%= hidden_field_tag 'first_comic_id', @first_comic_id %>
+    <%= hidden_field_tag 'last_comic_id', @last_comic_id %>
+    <% @add_comics.each do | c | %>
+
+      <h3><%= c.title %></h3>
+
+      <% if c.image? %>
+        <img src='<%= c.link %>' />
+        <br />
+      <% else %>
+        <h4><a href="<%= c.link %>"><%= c.link %></a></h4>
+      <% end %>
+
+      <%= check_box_tag(c.id, '1', false, :class => 'checkbox') %>
+      <%= label_tag("Add?") %>
+      <br />
+      <%= label_tag("Title: ") %>
+      <%= text_field_tag("#{c.id}_title", c.title, :size => 59) %>
+      <br />
+      <%= label_tag("Link:  ") %>
+      <%= text_field_tag("#{c.id}_link", c.link,:size => 59) %>
+
+      <br />
+      <br />
+    <% end %>
+
+
+    <%= submit_tag "Add Moar Lulz!" %>
+  <% end %>
+<% end %>

@@ -12,6 +12,7 @@ group :development, :test do
 end
 
 gem 'json'
+gem 'fastimage'
 
 # Use unicorn as the web server
 # gem 'unicorn'

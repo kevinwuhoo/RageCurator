@@ -39,3 +39,15 @@ header {
   float: left;
   padding: 0 1em;
 }
+
+input {
+  font-size: 12pt
+}
+input.checkbox {
+  height: 30px;
+  width: 30px;
+}
+
+body {
+  font-size: 12pt
+}
