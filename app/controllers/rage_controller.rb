@@ -1,5 +1,5 @@
 class RageController < ApplicationController
-  before_filter :authenticate, :except => [:home, :queue]
+  before_filter :authenticate, :except => [:home]
 
   def tweet
   @comic = Comic.where(:queue => true).limit(1)
