@@ -13,6 +13,8 @@ end
 
 gem 'json'
 gem 'fastimage'
+gem 'oauth'
+gem 'twitter'
 
 # Use unicorn as the web server
 # gem 'unicorn'
