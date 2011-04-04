@@ -10,10 +10,10 @@ class RageController < ApplicationController
     @comic.save
 
     Twitter.configure do |config|
-      config.consumer_key       = ''
-      config.consumer_secret    = ''
-      config.oauth_token        = '' 
-      config.oauth_token_secret = ''
+      config.consumer_key       = ENV["rage_curator_consumer_key"]
+      config.consumer_secret    = ENV['rage_curator_consumer_secret']
+      config.oauth_token        = ENV['rage_curator_oauth_token']
+      config.oauth_token_secret = ENV['rage_curator_oauth_token_secret']
     end
     client = Twitter::Client.new
     client.update("#{@comic.title} #{@comic.link}")
@@ -34,7 +34,7 @@ class RageController < ApplicationController
 
   def add
     @add_comics = Comic.where(:view => false).limit(25)
-    if @add_comics.nil?
+    if !@add_comics.empty?
       @first_comic_id = @add_comics.first[:id]
       @last_comic_id = @add_comics.last[:id]
     end
