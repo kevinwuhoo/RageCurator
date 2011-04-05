@@ -1,0 +1,6 @@
+<h2> Tweet </h2>
+<% if @comic.nil? %>
+  <h3> No comics in queue, tell <a href="http://twitter.com/kevinwuhoo">@kevinwuhoo</a> to get on it! </h3>
+<% else %>
+  <%= raw display_comic @comic %>
+<% end %>

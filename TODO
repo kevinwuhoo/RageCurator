@@ -1,0 +1,3 @@
+* Add functionality for imgur links which don't link directly to a picture.
+* Speed up link detection (by string?). Fastimage may have bug?
+* Queue is backward, so is tweet order.

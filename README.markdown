@@ -1,0 +1,1 @@
+Rails app developed to manage the [ragecurator](twitter.com/ragecurator) account. Scrapes reddit.com/r/fffffffuuuuuuuuuuuu(reddit.com/r/fffffffuuuuuuuuuuuu) for top comics for curation. Allows automated tweeting and scraping via http get.
