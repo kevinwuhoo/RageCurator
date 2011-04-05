@@ -2,29 +2,31 @@ class RageController < ApplicationController
   before_filter :authenticate, :except => [:home]
 
   def tweet
-  @comic = Comic.where(:queue => true).limit(1)
-  if !@comic.empty?
-    @comic = @comic[0]
-    @comic.queue = false
-    @comic.tweet = true
-    @comic.save
+    @comic = Comic.where(:queue => true).limit(1)
+    if !@comic.empty?
+      @comic = @comic[0]
+      @comic.queue = false
+      @comic.tweet = true
+      @comic.save
 
-    Twitter.configure do |config|
-      config.consumer_key       = ENV["rage_curator_consumer_key"]
-      config.consumer_secret    = ENV['rage_curator_consumer_secret']
-      config.oauth_token        = ENV['rage_curator_oauth_token']
-      config.oauth_token_secret = ENV['rage_curator_oauth_token_secret']
+      Twitter.configure do |config|
+        config.consumer_key       = ENV["rage_curator_consumer_key"]
+        config.consumer_secret    = ENV['rage_curator_consumer_secret']
+        config.oauth_token        = ENV['rage_curator_oauth_token']
+        config.oauth_token_secret = ENV['rage_curator_oauth_token_secret']
+      end
+      client = Twitter::Client.new
+      client.update("#{@comic.title} #{@comic.link}")
+      
+    else
+      @comic = nil #tweet view determines if it displays via nil
     end
-    client = Twitter::Client.new
-    client.update("#{@comic.title} #{@comic.link}")
-    
-  else
-    @comic = nil #tweet view determines if it displays via nil
-  end
   end
 
   # Gets the most recent tweet by RageCurator from twitter
   def home
+    require 'open-uri'
+    
     url = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=ragecurator&count=1&trim_user=true'
     content = JSON.parse(open(url).read)[0]["text"]
     @comic = Comic.new(:title => content[0, content.index("http")],
@@ -47,6 +49,7 @@ class RageController < ApplicationController
 
   # Scrapes reddit.com
   def scrape
+    require 'open-uri'
 
     @scraped_comics = []
     @add_count = 0
@@ -119,4 +122,5 @@ class RageController < ApplicationController
   def image?(str)
     str =~ /http:\/\/.*\.((png)|(jpg)|(bmp)|(gif))/
   end
+
 end

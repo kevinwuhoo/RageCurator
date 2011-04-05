@@ -11,7 +11,7 @@
 
       <h3><%= c.title %></h3>
 
-      <% if c.image? %>
+      <% if image?(c.link) %>
         <img src='<%= c.link %>' />
         <br />
       <% else %>

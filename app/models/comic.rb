@@ -14,10 +14,4 @@
 #
 
 class Comic < ActiveRecord::Base
-
-  def image?
-    puts "slow?"
-    !FastImage.type(link).nil?
-  end
-
 end
