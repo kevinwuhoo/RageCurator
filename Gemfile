@@ -12,7 +12,6 @@ group :development, :test do
 end
 
 gem 'json'
-gem 'fastimage'
 gem 'oauth'
 gem 'twitter'
 

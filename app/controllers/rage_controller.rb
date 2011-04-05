@@ -113,10 +113,10 @@ class RageController < ApplicationController
   end
 
   def is_i?(str)
-    !!(str =~ /^[-+]?[0-9]+$/)
+    str =~ /^[-+]?[0-9]+$/
   end
 
   def image?(str)
-    !FastImage.type(str).nil?
+    str =~ /http:\/\/.*\.((png)|(jpg)|(bmp)|(gif))/
   end
 end
