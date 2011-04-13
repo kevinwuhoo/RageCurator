@@ -36,10 +36,12 @@ class RageController < ApplicationController
 
   def add
     @add_comics = Comic.where(:view => false).limit(25)
+    '''
     if !@add_comics.empty?
       @first_comic_id = @add_comics.first[:id]
       @last_comic_id = @add_comics.last[:id]
     end
+    '''
 
   end
 

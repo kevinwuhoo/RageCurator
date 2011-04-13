@@ -3,10 +3,16 @@
 <% if @add_comics.empty? %>
   <h3> No comics in database, scrape for more lulz! </h3>
 <% else %>
+<%=  @first_comic_id%>
+<%=  @last_comic_id%>
+<%= @add_comics.length %>
+
+<%= @add_comics.first.id %>
+<%= @add_comics.last.id %>
 
   <%= form_tag({:controller => "rage", :action => "add_submit"}, :method => "post") do%>
-    <%= hidden_field_tag 'first_comic_id', @first_comic_id %>
-    <%= hidden_field_tag 'last_comic_id', @last_comic_id %>
+    <%= hidden_field_tag 'first_comic_id', @add_comics.first.id %>
+    <%= hidden_field_tag 'last_comic_id', @add_comics.last.id %>
     <% @add_comics.each do | c | %>
 
       <h3><%= c.title %></h3>
