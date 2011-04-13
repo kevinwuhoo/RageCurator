@@ -2,9 +2,9 @@ class RageController < ApplicationController
   before_filter :authenticate, :except => [:home]
 
   def tweet
-    @comic = Comic.where(:queue => true).limit(1)
+    @comic = Comic.where(:queue => true).last
     if !@comic.empty?
-      @comic = @comic[0]
+      #@comic = @comic[0]
       @comic.queue = false
       @comic.tweet = true
       @comic.save
