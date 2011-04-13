@@ -101,8 +101,10 @@ class RageController < ApplicationController
     if @error.nil?
       for i in (params[:first_comic_id].to_i..params[:last_comic_id].to_i)
         c = Comic.find_by_id(i)
-        c.view = true
-        c.save
+        if c
+          c.view = true
+          c.save
+        end
       end
       @add_comics.each do |c|
         key = c[:id]
