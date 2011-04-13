@@ -3,6 +3,7 @@
 <% if @add_comics.empty? %>
   <h3> No comics in database, scrape for more lulz! </h3>
 <% else %>
+<% p @add_comics #Don't know why but this fixes problem'%>
 
   <%= form_tag({:controller => "rage", :action => "add_submit"}, :method => "post") do%>
     <%= hidden_field_tag 'first_comic_id', @add_comics.first.id %>
