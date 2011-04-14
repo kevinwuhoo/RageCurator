@@ -2,6 +2,7 @@
 <% if @queue_comics.empty? %>
   <h3> No comics in queue, tell <a href="http://twitter.com/kevinwuhoo">@kevinwuhoo</a> to get on it! </h3>
 <% else %>
+  <h3> There are <%= @queue_comics.length %> comics in the queue. </h3>
   <% @queue_comics.each do |c| %>
     <%= raw display_comic c %>
   <% end %>
