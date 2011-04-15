@@ -3,7 +3,7 @@ class RageController < ApplicationController
 
   def tweet
     @comic = Comic.where(:queue => true).last
-    if !@comic.empty?
+    if !@comic.nil?
       #@comic = @comic[0]
       @comic.queue = false
       @comic.tweet = true
