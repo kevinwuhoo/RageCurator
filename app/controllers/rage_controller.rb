@@ -4,7 +4,6 @@ class RageController < ApplicationController
   def tweet
     @comic = Comic.where(:queue => true).first
     if !@comic.nil?
-      #@comic = @comic[0]
       @comic.queue = false
       @comic.tweet = true
       @comic.save
@@ -19,7 +18,7 @@ class RageController < ApplicationController
       client.update("#{@comic.title} #{@comic.link}")
       
     else
-      @comic = nil #tweet view determines if it displays via nil
+      @comic = nil #mark so that tweet view knows if successful
     end
   end
 
@@ -36,13 +35,6 @@ class RageController < ApplicationController
 
   def add
     @add_comics = Comic.where(:view => false).limit(25)
-    '''
-    if !@add_comics.empty?
-      @first_comic_id = @add_comics.first[:id]
-      @last_comic_id = @add_comics.last[:id]
-    end
-    '''
-
   end
 
   def queue
@@ -69,6 +61,7 @@ class RageController < ApplicationController
       @scraped_comics[i].push method_span["href"]
     end
 
+    # Adds comics. Checks if reddit link is in array, if not create new row.
     @scraped_comics.each do | scrape |
       if Comic.where(:reddit => scrape[2]).empty?
         Comic.create( :title => scrape[0], :link => scrape[1], 
@@ -81,33 +74,38 @@ class RageController < ApplicationController
   end
 
   def add_submit
-    @add_comics = []
+    @add_comics = []     # All selected comics
+    @all_comics = []     # All comics (viewed on page)
     @error = nil
 
-    # Go through checked comics. If the link is not an image
-    # display pass error otherwise add to array.
+
     params.each do |key, value|
+      # If int key, then is marked comic, check for img link or error
       if is_i? key
-        #puts "#{key} => #{value}"
-        c = Comic.find_by_id key
+        @c = Comic.find_by_id key
         if !image?(params["#{key}_link"])
           @error = "#{c.title} does not have image link!"
         else
-          @add_comics.push c
+          @add_comics.push @c
         end
+      end
+      # Get all viewed comics
+      # If key has title in it, add to all array
+      if key =~ /\d+_title/
+        p key 
+        key = key.split('_')[0]
+        @all_comics.push Comic.find_by_id key
       end
     end
 
-    # Mark all viewed as seen.
-    # For all in add_comic modify title and link in db, mark as in queue.
     if @error.nil?
-      for i in (params[:first_comic_id].to_i..params[:last_comic_id].to_i)
-        c = Comic.find_by_id(i)
-        if c
-          c.view = true
-          c.save
-        end
+      # Mark all on page as viewed
+      @all_comics.each do |c|
+       c.view = true
+       c.save
       end
+      
+      # Save modified title and link and mark as queued
       @add_comics.each do |c|
         key = c[:id]
         c.title = params["#{key}_title"]
