@@ -84,7 +84,7 @@ class RageController < ApplicationController
       if is_i? key
         @c = Comic.find_by_id key
         if !image?(params["#{key}_link"])
-          @error = "#{c.title} does not have image link!"
+          @error = "#{@c.title} does not have image link!"
         else
           @add_comics.push @c
         end
@@ -92,7 +92,7 @@ class RageController < ApplicationController
       # Get all viewed comics
       # If key has title in it, add to all array
       if key =~ /\d+_title/
-        p key 
+        #p key 
         key = key.split('_')[0]
         @all_comics.push Comic.find_by_id key
       end
