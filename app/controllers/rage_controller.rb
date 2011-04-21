@@ -35,10 +35,12 @@ class RageController < ApplicationController
 
   def add
     @add_comics = Comic.where(:view => false).limit(25)
+    @add_count = Comic.where(:view => false).length
   end
 
   def queue
     @queue_comics = Comic.where(:queue => true).limit(10)
+    @queue_count = Comic.where(:queue => true).length
   end
 
   # Scrapes reddit.com
