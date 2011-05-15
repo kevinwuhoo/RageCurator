@@ -65,7 +65,22 @@ class RageController < ApplicationController
 
     # Adds comics. Checks if reddit link is in array, if not create new row.
     @scraped_comics.each do | scrape |
+      
+
+    
       if Comic.where(:reddit => scrape[2]).empty?
+        
+        # If link is imgur and not image, get image link
+        if !scrape[1].include? "i.imgur.com" and scrape[1].include? "imgur"
+          # Gets the image link with no params
+          if scrape[1].include? "?"
+            scrape[1] = scrape[1][0,scrape[1].index("?")]
+          end
+          # Open imgur link and get the image, reassign to link
+          doc = Nokogiri::HTML(open(scrape[1]))
+          scrape[1] = doc.at_xpath('//div[@class="image textbox"]').children[0].attributes["href"].to_s   
+        end
+    
         Comic.create( :title => scrape[0], :link => scrape[1], 
                       :reddit => scrape[2], :view => false, :tweet => false,
                        :queue => false)

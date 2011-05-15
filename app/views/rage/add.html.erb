@@ -4,7 +4,7 @@
   <h3> No comics in database, scrape for more lulz! </h3>
 <% else %>
 <% p @add_comics #Don't know why but this fixes problem'%>
-  <h3> <%= @add_count %> comics to curate. </h3>
+  <h3> There are <%= @add_count %> comics to curate. Get on it! </h3>
 
   <%= form_tag({:controller => "rage", :action => "add_submit"}, :method => "post") do%>
 

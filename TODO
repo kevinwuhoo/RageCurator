@@ -1,5 +1,5 @@
-* Add functionality for imgur links which don't link directly to a picture.
-* Repeated image? function.
 * Manual add comic.
 
 DONE * Queue is backward, so is tweet order.
+DONE * Add functionality for imgur links which don't link directly to a picture.
+DONE * Repeated image? function.
