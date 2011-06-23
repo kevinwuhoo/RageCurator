@@ -70,7 +70,7 @@ class RageController < ApplicationController
       #p scrape
       #puts "==========================="
 
-      #if Comic.where(:reddit => scrape[2]).empty?
+      if Comic.where(:reddit => scrape[2]).empty?
         
         # If link is imgur and not image, get image link
         if !image?(scrape[1]) and scrape[1].include? "imgur"
@@ -91,7 +91,7 @@ class RageController < ApplicationController
                       :reddit => scrape[2], :view => false, :tweet => false,
                        :queue => false)
         @add_count += 1
-      #end
+      end
     end
     
   end
