@@ -84,9 +84,9 @@ class RageController < ApplicationController
         scrape[1] = doc.at_xpath('//div[@class="image textbox "]').children[0].attributes["src"].to_s  
       end
     
-      puts "==========================="
-      p scrape
-      puts "==========================="
+      #puts "==========================="
+      #p scrape
+      #puts "==========================="
 
       if Comic.where(:link=> scrape[1]).empty?
         Comic.create( :title => scrape[0], :link => scrape[1], 
