@@ -70,23 +70,25 @@ class RageController < ApplicationController
       #p scrape
       #puts "==========================="
 
-      if Comic.where(:reddit => scrape[2]).empty?
+      # if Comic.where(:reddit => scrape[2]).empty?
         
-        # If link is imgur and not image, get image link
-        if !image?(scrape[1]) and scrape[1].include? "imgur"
-          # Gets the image link with no params
-          if scrape[1].include? "?"
-            scrape[1] = scrape[1][0,scrape[1].index("?")]
-          end
-          # Open imgur link and get the image, reassign to link
-          doc = Nokogiri::HTML(open(scrape[1]))
-          
-          scrape[1] = doc.at_xpath('//div[@class="image textbox "]').children[0].attributes["src"].to_s  
+      # If link is imgur and not image, get image link
+      if !image?(scrape[1]) and scrape[1].include? "imgur"
+        # Gets the image link with no params
+        if scrape[1].include? "?"
+          scrape[1] = scrape[1][0,scrape[1].index("?")]
         end
+        # Open imgur link and get the image, reassign to link
+        doc = Nokogiri::HTML(open(scrape[1]))
+        
+        scrape[1] = doc.at_xpath('//div[@class="image textbox "]').children[0].attributes["src"].to_s  
+      end
     
-        puts "==========================="
-        p scrape
-        puts "==========================="
+      puts "==========================="
+      p scrape
+      puts "==========================="
+
+      if Comic.where(:link=> scrape[1]).empty?
         Comic.create( :title => scrape[0], :link => scrape[1], 
                       :reddit => scrape[2], :view => false, :tweet => false,
                        :queue => false)
