@@ -4,9 +4,6 @@ class RageController < ApplicationController
   def tweet
     @comic = Comic.where(:queue => true).first
     if !@comic.nil?
-      @comic.queue = false
-      @comic.tweet = true
-      @comic.save
 
       Twitter.configure do |config|
         config.consumer_key       = ENV["rage_curator_consumer_key"]
@@ -32,6 +29,10 @@ class RageController < ApplicationController
       end 
 
       client.update_with_media("#{@comic.title}", File.new(comic_path))
+      
+      @comic.queue = false
+      @comic.tweet = true
+      @comic.save
       
     else
       @comic = nil #mark so that tweet view knows if successful
