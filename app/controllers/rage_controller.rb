@@ -15,7 +15,23 @@ class RageController < ApplicationController
         config.oauth_token_secret = ENV['rage_curator_oauth_token_secret']
       end
       client = Twitter::Client.new
-      client.update("#{@comic.title} #{@comic.link}")
+      # client.update("#{@comic.title} #{@comic.link}")
+      
+      comic_file = @comic.link.split("/")[-1]
+      # If on heroku
+      if defined? RAILS_ROOT
+        comic_path = "#{RAILS_ROOT}/tmp/#{comic_file}"
+      else 
+        comic_path = comic_file
+      end
+      File.open(comic_path, 'wb+') do |output|
+      # Download image
+        open(@comic.link) do |input|
+          output << input.read
+        end
+      end 
+
+      client.update_with_media("#{@comic.title}", File.new(comic_path))
       
     else
       @comic = nil #mark so that tweet view knows if successful

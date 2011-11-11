@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-RageCurator::Application.config.secret_token = '721cfd4260d90ec50b095fb3bc5a81cefa21fd768c57824a2d780a044e5dc9864467f1e4f36c01e1dc9e3ea3f0e97c940450bc026186eeb8055189c5208b0ce6'
+RageCurator::Application.config.secret_token = '97f7ba557ca9f97230420e85fb5006e9cb31ce7c299ad0f84202ec96ba7737ffc0264747a3182d52524f257ff84c8bc71e1946dff6922e08d793d75c1a2492d2'
