@@ -16,8 +16,8 @@ class RageController < ApplicationController
       
       comic_file = @comic.link.split("/")[-1]
       # If on heroku
-      if defined? RAILS_ROOT
-        comic_path = "#{RAILS_ROOT}/tmp/#{comic_file}"
+      if defined? Rails.root
+        comic_path = "#{Rails.root}/tmp/#{comic_file}"
       else 
         comic_path = comic_file
       end
@@ -29,7 +29,7 @@ class RageController < ApplicationController
       end 
 
       client.update_with_media("#{@comic.title}", File.new(comic_path))
-      
+
       @comic.queue = false
       @comic.tweet = true
       @comic.save
