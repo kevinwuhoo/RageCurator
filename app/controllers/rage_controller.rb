@@ -1,3 +1,4 @@
+require 'open-uri'
 class RageController < ApplicationController
   before_filter :authenticate, :except => [:home]
 
@@ -41,8 +42,6 @@ class RageController < ApplicationController
 
   # Gets the most recent tweet by RageCurator from twitter
   def home
-    require 'open-uri'
-    
     url = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=ragecurator&count=1&trim_user=true'
     content = JSON.parse(open(url).read)[0]["text"]
     @comic = Comic.new(:title => content[0, content.index("http")],
