@@ -29,7 +29,7 @@ class RageController < ApplicationController
         end
       end 
 
-      client.update_with_media("#{@comic.title}", File.new(comic_path))
+      client.update_with_media("#{@comic.title} #{@comic.link}", File.new(comic_path))
 
       @comic.queue = false
       @comic.tweet = true
