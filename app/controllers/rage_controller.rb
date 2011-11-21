@@ -28,8 +28,13 @@ class RageController < ApplicationController
           output << input.read
         end
       end 
-
-      client.update_with_media("#{@comic.title} #{@comic.link}", File.new(comic_path))
+      
+      # If gif, doin't tweet with pic.twitter
+      if comic_path[-3..-1] == "gif"
+        client.update("#{@comic.title} #{@comic.link}")
+      else
+        client.update_with_media("#{@comic.title} #{@comic.link}", File.new(comic_path))
+      end
 
       @comic.queue = false
       @comic.tweet = true
