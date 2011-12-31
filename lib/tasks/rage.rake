@@ -1,5 +1,5 @@
 task :remove_viewed => :environment do
-   Comic.delete_all("view = true AND created_at < :month", {:month => 1.month.ago})
+   Comic.delete_all("view = true AND created_at > :month", {:month => 1.month.ago})
 end
 
 task :empty_scraped => :environment do
