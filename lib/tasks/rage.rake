@@ -21,4 +21,5 @@ task :remove_dupes => :enviroment do
     else
       images << c.link
     end
+  end
 end
