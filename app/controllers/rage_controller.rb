@@ -154,6 +154,7 @@ class RageController < ApplicationController
         c.title = params["#{key}_title"]
         c.link = params["#{key}_link"]
         c.queue = true
+        c.view = false
         c.save
       end
     end
