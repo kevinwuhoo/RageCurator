@@ -1,9 +1,14 @@
 require 'open-uri'
+require 'json'
+
+
 class RageController < ApplicationController
   before_filter :authenticate, :except => [:home]
 
   def tweet
-    @comic = Comic.where(:queue => true).first
+
+    @comic = Comic.where(:queue => true).order("updated_at DESC").limit(1)[0]
+
     if !@comic.nil?
 
       Twitter.configure do |config|
@@ -47,10 +52,7 @@ class RageController < ApplicationController
 
   # Gets the most recent tweet by RageCurator from twitter
   def home
-    url = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=ragecurator&count=1&trim_user=true'
-    content = JSON.parse(open(url).read)[0]["text"]
-    @comic = Comic.new(:title => content[0, content.index("http")],
-                       :link => content[content.index("http"), content.length])
+    @comic = Comic.where(:tweet => true).order("updated_at DESC").limit(1)[0]
 
   end
 
@@ -60,63 +62,58 @@ class RageController < ApplicationController
   end
 
   def queue
-    @queue_comics = Comic.where(:queue => true).limit(10)
+    @queue_comics = Comic.where(:queue => true)
     @queue_count = Comic.where(:queue => true).length
   end
 
-  # Scrapes reddit.com
   def scrape
-    require 'open-uri'
 
-    @scraped_comics = []
-    @add_count = 0
+    @total_ctr = 0
+    @duplicates = 0
+    @added_comics = []
 
-    url = 'http://www.reddit.com/r/fffffffuuuuuuuuuuuu'
-    doc = Nokogiri::HTML(open(url))
+    rage_subreddits = %w[
+      http://www.reddit.com/r/fffffffuuuuuuuuuuuu
+      http://www.reddit.com/r/classicrage
+    ]
 
-    # Get title and link
-    doc.xpath('//a[@class="title "]').each do | method_span |  
-      @scraped_comics.push [method_span.content, method_span["href"]]
-    end  
+    rage_subreddits.each do |subreddit|  
+      subreddit = JSON(open(subreddit + ".json").read())
+      subreddit['data']['children'].each do |item|
 
-    # Get reddit thread
-    doc.xpath('//a[@class="comments"]').each_with_index do | method_span, i |  
-      @scraped_comics[i].push method_span["href"]
-    end
+        item = item['data']
 
-    # Adds comics. Checks if reddit link is in array, if not create new row.
-    @scraped_comics.each do | scrape |
-      
-      #puts "==========================="
-      #p scrape
-      #puts "==========================="
+        @total_ctr += 1
+        url = nil
 
-      # if Comic.where(:reddit => scrape[2]).empty?
-        
-      # If link is imgur and not image, get image link
-      if !image?(scrape[1]) and scrape[1].include? "imgur"
-        # Gets the image link with no params
-        if scrape[1].include? "?"
-          scrape[1] = scrape[1][0,scrape[1].index("?")]
+        # Duplicate detection using reddit link
+        item['permalink'] = "http://reddit.com" + item['permalink']
+        if !Comic.find_by_reddit(item['permalink']).nil?
+          @duplicates += 1
+          next
         end
-        # Open imgur link and get the image, reassign to link
-        doc = Nokogiri::HTML(open(scrape[1]))
-        
-        scrape[1] = doc.at_xpath('//div[@class="image textbox "]').children[0].attributes["src"].to_s  
-      end
-    
-      #puts "==========================="
-      #p scrape
-      #puts "==========================="
 
-      if Comic.where(:link=> scrape[1]).empty?
-        Comic.create( :title => scrape[0], :link => scrape[1], 
-                      :reddit => scrape[2], :view => false, :tweet => false,
-                       :queue => false)
-        @add_count += 1
+        # Check if link is image
+        if image?(item['url'])
+          url = item['url']
+        # If not use regex get image
+        elsif item['url'].include?("imgur")
+          page = open(item['url']).read()
+          page =~ /<link rel="image_src" href="(.*)" \/>/
+          url = $1
+        end
+
+        if !url.nil? 
+          c = Comic.create(:title => item['title'], 
+                           :link => url, 
+                           :reddit => item['permalink'], 
+                           :view => false, 
+                           :tweet => false,
+                           :queue => false)
+          @added_comics << c
+        end
       end
     end
-    
   end
 
   def add_submit
