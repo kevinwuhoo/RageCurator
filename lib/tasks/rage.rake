@@ -1,12 +1,12 @@
-task :remove_viewed => :enviroment do
+task :remove_viewed => :environment do
    Comic.delete_all("view = true AND created_at < :month", {:month => 1.month.ago})
 end
 
-task :empty_scraped => :enviroment do
+task :empty_scraped => :environment do
   Comic.delete_all(:tweet => false, :queue => false, :queue => false)
 end
 
-task :remove_dupes => :enviroment do  
+task :remove_dupes => :environment do  
   comics = Comic.where(:tweet => true)
   comics.merge(Comic.where(:queue => true))
 
