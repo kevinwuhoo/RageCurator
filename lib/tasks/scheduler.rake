@@ -5,12 +5,12 @@ task :tweet => :environment do
   # http://ruby-doc.org/stdlib-1.9.3/libdoc/net/http/rdoc/Net/HTTP.html
   require 'net/http'
 
-  uri = URI('http://ragecurator.heroku.com/tweet')
+  # uri = URI('http://ragecurator.heroku.com/tweet')
 
-  req = Net::HTTP::Get.new(uri.request_uri)
+  req = Net::HTTP::Get.new('/tweet/')
   req.basic_auth ENV['rage_curator_user'], ENV['rage_curator_pass']
 
-  res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+  res = Net::HTTP.start('ragecurator.heroku.com', 80) {|http|
     http.request(req)
   }
 
