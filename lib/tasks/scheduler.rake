@@ -18,6 +18,16 @@ task :tweet => :environment do
 
 end
 
-# task :send_reminders => :environment do
-#   User.send_reminders
-# end
+task :scrape => :environment do
+  require 'net/http'
+
+  req = Net::HTTP::Get.new('/scrape/')
+  req.basic_auth ENV['rage_curator_user'], ENV['rage_curator_pass']
+
+  res = Net::HTTP.start('ragecurator.heroku.com', 80) {|http|
+    http.request(req)
+  }
+
+  puts res.body
+
+end
