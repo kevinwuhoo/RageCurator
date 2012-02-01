@@ -10,7 +10,7 @@ task :tweet => :environment do
   TWEET_HOURS = [16, 18, 19, 20, 21, 22, 23, 0, 1, 2, 4, 6]
   # Corresponds to PST (-8) at 8, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22
 
-  now_hour = Time.new.hour
+  now_hour = Time.new.hour - 8
   # Don't tweet if already tweeted this hour. Stops heroku's multiple
   # scheduler calling problem
   last_comic = Comic.where(:tweet => true).order("updated_at DESC").limit(1)[0]
@@ -27,7 +27,7 @@ task :tweet => :environment do
     }
 
     puts res.body
-    
+
   else
     puts "Not an hour to tweet!"
   end
