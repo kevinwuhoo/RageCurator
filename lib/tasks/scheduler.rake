@@ -7,14 +7,30 @@ task :tweet => :environment do
 
   # uri = URI('http://ragecurator.heroku.com/tweet')
 
-  req = Net::HTTP::Get.new('/tweet/')
-  req.basic_auth ENV['rage_curator_user'], ENV['rage_curator_pass']
+  TWEET_HOURS = [16, 18, 19, 20, 21, 22, 23, 0, 1, 2, 4, 6]
+  # Corresponds to PST (-8) at 8, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22
 
-  res = Net::HTTP.start('ragecurator.heroku.com', 80) {|http|
-    http.request(req)
-  }
+  now_hour = Time.new.hour
+  # Don't tweet if already tweeted this hour. Stops heroku's multiple
+  # scheduler calling problem
+  last_comic = Comic.where(:tweet => true).order("updated_at DESC").limit(1)[0]
+  if now_hour == last_comic.updated_at.hour
+    puts "Already tweeted this hour!"
 
-  puts res.body
+  elsif TWEET_HOURS.include? now_hour
+
+    req = Net::HTTP::Get.new('/tweet/')
+    req.basic_auth ENV['rage_curator_user'], ENV['rage_curator_pass']
+
+    res = Net::HTTP.start('ragecurator.heroku.com', 80) {|http|
+      http.request(req)
+    }
+
+    puts res.body
+    
+  else
+    puts "Not an hour to tweet!"
+  end
 
 end
 
