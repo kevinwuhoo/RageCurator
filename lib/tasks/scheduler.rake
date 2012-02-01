@@ -10,10 +10,13 @@ task :tweet => :environment do
   TWEET_HOURS = [16, 18, 19, 20, 21, 22, 23, 0, 1, 2, 4, 6]
   # Corresponds to PST (-8) at 8, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22
 
-  now_hour = Time.new.hour - 8
-  if now_hour < 0
-    now_hour += 24
-  end
+  # For whatever reason, console says time is in PST, but when run app is run
+  # the times are in UTC
+  now_hour = Time.now.gmtime.hour
+  # now_hour = Time.new.hour + 8
+  # if now_hour < 0
+    # now_hour += 24
+  # end
 
   # Don't tweet if already tweeted this hour. Stops heroku's multiple
   # scheduler calling problem
@@ -33,8 +36,7 @@ task :tweet => :environment do
     puts res.body
 
   else
-    # puts "Not an hour to tweet! Currently the hour is #{now_hour} in #{Time.new.zone}."
-    puts "Currently the hour is #{Time.new}."
+    puts "Not an hour to tweet! Currently the hour is #{now_hour}."
   end
 
 end
