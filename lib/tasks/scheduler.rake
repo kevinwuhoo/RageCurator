@@ -19,7 +19,7 @@ task :tweet => :environment do
   # scheduler calling problem
   last_comic = Comic.where(:tweet => true).order("updated_at DESC").limit(1)[0]
   if now_hour == last_comic.updated_at.hour
-    puts "Already tweeted this hour!"
+    puts "Already tweeted this hour! Currently the hour is #{now_hour}."
 
   elsif TWEET_HOURS.include? now_hour
 
@@ -33,7 +33,7 @@ task :tweet => :environment do
     puts res.body
 
   else
-    puts "Not an hour to tweet!"
+    puts "Not an hour to tweet! Currently the hour is #{now_hour}."
   end
 
 end
