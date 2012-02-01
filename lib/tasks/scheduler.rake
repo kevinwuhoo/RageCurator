@@ -33,7 +33,7 @@ task :tweet => :environment do
     puts res.body
 
   else
-    puts "Not an hour to tweet! Currently the hour is #{now_hour}."
+    puts "Not an hour to tweet! Currently the hour is #{now_hour} in #{Time.new.zone}."
   end
 
 end
