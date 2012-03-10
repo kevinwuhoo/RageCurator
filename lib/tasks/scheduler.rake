@@ -21,10 +21,12 @@ task :tweet => :environment do
   # Don't tweet if already tweeted this hour. Stops heroku's multiple
   # scheduler calling problem
   last_comic = Comic.where(:tweet => true).order("updated_at DESC").limit(1)[0]
-  if now_hour == last_comic.updated_at.hour
-    puts "Already tweeted this hour! Currently the hour is #{now_hour}."
 
-  elsif TWEET_HOURS.include? now_hour
+  # if now_hour == last_comic.updated_at.hour
+    # puts "Already tweeted this hour! Currently the hour is #{now_hour}."
+
+  # elsif TWEET_HOURS.include? now_hour
+  if TWEET_HOURS.include? now_hour
 
     req = Net::HTTP::Get.new('/tweet/')
     req.basic_auth ENV['rage_curator_user'], ENV['rage_curator_pass']
